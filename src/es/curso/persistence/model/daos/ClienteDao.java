@@ -1,7 +1,9 @@
 package es.curso.persistence.model.daos;
 
-public class ClienteDao {
+import es.curso.model.Entity.Cliente;
+
+public interface ClienteDao {
 	
-	
+	public void create(Cliente cliente);
 
 }

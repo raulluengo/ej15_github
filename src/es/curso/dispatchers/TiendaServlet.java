@@ -1,7 +1,10 @@
 package es.curso.dispatchers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.persistence.metamodel.SetAttribute;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import es.curso.controllers.ejb.DarAltaClienteControllerEjb;
+import es.curso.controllers.ejb.ListarTodosControllerEjb;
 import es.curso.model.Entity.Cliente;
 
 
@@ -39,14 +43,31 @@ public class TiendaServlet extends HttpServlet {
 		//busco una, dependiendo el substring de su url(1), y invoco al controlador adecuado
 		String action = request.getPathInfo().substring(1);
 		request.setCharacterEncoding("UTF-8");
+		String titulo = "Sin título";
 		switch(action){
 		case "listarTodos":
 		  //se invocara el controlador adecuado, redirige a otra pagina para obtener todos los clientes
+			ListarTodosControllerEjb todos = new ListarTodosControllerEjb();
+			ArrayList<Cliente> clientes = todos.listarTodos();
+			request.setAttribute("clientes", clientes);
+			titulo = "Listado general de clientes";
 		break;
 		case "buscarPorNombre":
 		  //se invoca controlador adecuado, redirige a otra pagina para obtener los clientes por el criterio de busqueda
+			titulo = "Resultado de la búsqueda por nombre";
 		break;
 		}
+		
+		//tengo que redirigir hacia una vista con el listado(jsp) para mostrar los clientes
+		RequestDispatcher rd;
+		//de alguna manera enviar a la vista el resultado de la consulta a la base de datos
+		
+		
+		rd = request.getRequestDispatcher("/jsp/listarTodos.jsp");
+		request.setAttribute("iva", new Integer(21));
+		request.setAttribute("titulo", titulo);
+		rd.forward(request, response);
+		
 	}
 
 	
